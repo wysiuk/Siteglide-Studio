@@ -1,0 +1,14 @@
+mutation($physical_file_path: String!, $slug: String!, $metadata: HashObject!, $layout: String){
+  admin_page_create(
+		page: {
+      layout: $layout
+      physical_file_path: $physical_file_path
+      slug: $slug
+      metadata: $metadata
+    }
+  ){
+    id
+    physical_file_path
+    slug
+  }
+}

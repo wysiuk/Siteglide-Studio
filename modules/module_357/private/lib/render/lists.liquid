@@ -1,0 +1,40 @@
+{% assign lists = '{}' | parse_json %}
+{%- for list in current_section.lists -%}
+  {% assign list_name = list[0] %}
+  {% assign list_data = list[1] %}
+  {% assign list_table = list.data_source.table %}
+  {% assign lists = lists | hash_add_key: list_name, null %}
+  {% assign mapping = list_data.mapping %}
+  {%- if list_data.data_source.type == "webapp" -%}
+    {% graphql record_data = 'modules/module_357/get_webapp_list_data', table: list_data.data_source.table, properties: list_data.data_source.properties, sort: list_data.data_source.sort, filter: list_data.data_source.filter, per_page: list_data.data_source.per_page | dig: 'records', 'results' -%}
+    {% assign list_data_array = '[]' | parse_json %}
+    {% capture webapp_slug -%}/{{webapp_config[list_data.data_source.table].slug}}/{% endcapture -%}
+
+    {%- for record in record_data -%}
+      {% assign list_data_item = '{}' | parse_json %}
+      {%- for field in mapping -%}
+        {% assign field_key = field[1] %}
+        {%- if field_key == 'slug' -%}
+          {% assign field_data = record.properties[field_key] | default: record[field_key]  %}
+          {% assign field_data = field_data | prepend: webapp_slug  %}
+        {%- else -%}
+          {% assign field_data = record.properties[field_key] | default: record[field_key]  %}
+        {%- endif -%}
+        {% assign list_data_item = list_data_item | hash_add_key: field[0], field_data %}
+      {%- endfor -%}
+      {% assign list_data_array = list_data_array | array_add: list_data_item %}
+    {%- endfor -%}
+    {% assign lists = lists | hash_add_key: list_name, list_data_array %}
+
+  {%- else list_data.data_source.type == "data" -%}
+    {% assign list_data_array = '[]' | parse_json %}
+    {%- for item in list_data.order -%}
+      {% assign list_data_item = list_data.data[item] %}
+      {%- if list_data_item -%}
+        {% assign list_data_array = list_data_array | array_add: list_data_item %}
+      {%- endif -%}
+    {%- endfor -%}
+    {% assign lists = lists | hash_add_key: list_name, list_data_array %}
+  {%- endif -%}
+{%- endfor -%}
+{% return lists -%}

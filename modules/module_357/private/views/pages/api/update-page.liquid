@@ -1,0 +1,18 @@
+---
+layout: ''
+method: post
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/update-page
+---
+{%- if params.json -%}
+  {% assign json = params.json | parse_json  %}
+{%- else -%}
+  {% assign json = context.post_params | parse_json %}
+{%- endif -%}
+{% graphql update = 'modules/module_357/update_page', metadata: json.metadata, physical_file_path: params.page_url -%}
+{{update.admin_page_update}}

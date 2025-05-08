@@ -1,0 +1,13 @@
+mutation($body: String, $metadata: HashObject!, $physical_file_path: String!){
+  admin_liquid_partial_update(
+    physical_file_path: $physical_file_path
+		liquid_partial: {
+      body:$body
+      metadata:$metadata
+      format: html
+    }
+  ){
+    id
+    metadata
+  }
+}

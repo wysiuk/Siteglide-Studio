@@ -1,0 +1,18 @@
+---
+slug: modules/module_357/api/delete-page
+method: delete
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "DELETE",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{%- graphql delete_partial = 'modules/module_357/delete_page', physical_file_path: params.physical_file_path -%}
+{
+  "ok": {%- if delete_partial.admin_page_delete.id -%}true{%- else -%}false{% endif -%},
+  "error": {{delete_partial.errors[0].message | json}}
+}
+{%- if delete_partial.admin_page_delete.id == null -%}{% response_status 500 -%}{% endif -%}

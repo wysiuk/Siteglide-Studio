@@ -1,0 +1,78 @@
+---
+slug: modules/module_357/api/create-template
+method: post
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{% graphql templates = 'modules/module_357/get_all_templates_for_creation' | dig: 'admin_liquid_layouts', 'results' -%}
+{% assign highest_template = 1 %}
+{% assign theme = params.theme | split: '/' %}
+{% assign theme = theme[1] %}
+
+{%- for template in templates -%}
+  {% assign template_number = template.path | remove: 'templates/' | plus: 0 %}
+  {%- if highest_template < template_number -%}
+    {% assign highest_template = template_number %}
+  {%- endif -%}
+{%- endfor -%}
+
+{% assign highest_template = highest_template | plus: 1 %}
+
+{% assign page_url = params.page_url  | replace: '/',' ' | strip | replace: ' ', '/' %}
+
+{%- capture physical_file_path %}views/layouts/templates/{{highest_template}}.liquid{%- endcapture-%}
+
+{% capture path -%}templates/{{highest_template}}{% endcapture -%}
+
+{% parse_json metadata -%}
+  {
+    "id": {{highest_template}},
+    "name": {{params.name | json}},
+    "type": "page",
+    "file_type": "template",
+    "last_edit": {{'now' | date: '%s000'}},
+    "studio_theme": {{params.theme | json}},
+    "studio_version": 3,
+    "studio": {
+      "settings": {
+      },
+      "head": {
+        "content": null
+      },
+      "footer": {
+        "order": [],
+        "sections": {}
+      },
+      "header": {
+        "order": [],
+        "sections": {}
+      },
+      "scripts": {
+        "content": null
+      }
+    }
+  }
+{% endparse_json -%}
+
+{% capture body -%}{%- raw -%}<html lang="en" dir="ltr">
+  <head>
+    {% include 'modules/module_357/render_head' %}
+  </head>
+  <body>
+    {%- include 'modules/module_357/render_header' -%}
+    {%- include 'modules/module_357/render_page' -%}
+    {%- include 'modules/module_357/render_footer' -%}
+  </body>
+</html>{%- endraw -%}{%- endcapture -%}
+
+{%- graphql create_layout = 'modules/module_357/create_template' physical_file_path: physical_file_path, path: path, metadata: metadata, body: body -%}
+{
+  "id": {{create_layout.admin_liquid_layout_create.id | json}},
+  "create_layout": {{create_layout | json}},
+  "physical_file_path": {{create_layout.admin_liquid_layout_create.physical_file_path | json}}
+}

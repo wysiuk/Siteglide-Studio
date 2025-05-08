@@ -1,0 +1,26 @@
+---
+slug: modules/module_357/api/delete-theme
+method: delete
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "DELETE",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{%- capture page_path %}theme/{{params.theme}}/sections{%- endcapture-%}
+{% assign physical_file_path = params.physical_file_path | remove: 'config.liquid' %}
+{%- unless physical_file_path contains 'views/partials/'-%}
+  {% response_status 500 -%}
+  {% return false -%}
+{%- endunless -%}
+{%- graphql delete_sections = 'modules/module_357/delete_partials', physical_file_path: physical_file_path -%}
+{
+  "ok": {%- if delete_sections.errors[0].message-%}false{%- else -%}true{% endif -%},
+  "error": {{delete_sections.errors[0].message | json}},
+  "delete_sections": {{delete_sections | json}},
+  "physical_file_path": {{physical_file_path  | json}}
+}
+{%- if delete_sections.errors[0].message-%}{% response_status 500 -%}{% endif -%}

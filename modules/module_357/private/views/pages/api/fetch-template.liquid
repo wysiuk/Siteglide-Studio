@@ -1,0 +1,16 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/fetch-template
+---
+{%- graphql page = 'modules/module_357/check_template', physical_file_path: params.physical_file_path | dig: 'admin_liquid_layouts', 'results' | first -%}
+{%- if page.metadata.studio == null -%}
+  {% response_status 404 -%}
+  {% return false -%}
+{%- endif -%}
+{{page.metadata | json | html_safe}}

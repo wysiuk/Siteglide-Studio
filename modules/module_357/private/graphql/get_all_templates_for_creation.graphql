@@ -1,0 +1,19 @@
+query{
+  admin_liquid_layouts(
+    per_page: 100
+    sort:{
+      path:{
+        order: DESC
+      }
+    }
+		filter: {
+      physical_file_path:{
+        starts_with:"views/layouts/templates"
+      }
+    }
+  ){
+		results{
+      path
+    }
+  }
+}

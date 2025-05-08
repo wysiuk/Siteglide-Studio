@@ -1,0 +1,27 @@
+---
+method: post
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/fetch-partials
+---
+{% assign params = context.post_params | parse_json %}
+{% comment %} For arr of physical file path directories, return partials {% endcomment %}
+{% comment %} {% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%} {% endcomment %}
+{% comment %} {%- capture page_path %}theme/{{settings.theme}}/sections{%- endcapture-%} {% endcomment %}
+{% assign orFilter = "" | split: "," %}
+{% assign empt_obj = "{}" | parse_json %}
+{% for path in params.paths %}
+  {% assign f = empt_obj | deep_clone %}
+  {% assign o = empt_obj | deep_clone %}
+  {% hash_assign o['starts_with'] = path %}
+  {% hash_assign f['path'] = o %}
+  {% assign orFilter = orFilter | array_add: f %}
+{% endfor %}
+{%- graphql partials = 'modules/module_357/get_partials', theme: 'theme_01', orFilter: orFilter | dig: 'admin_liquid_partials', 'results' -%}
+{{partials}}

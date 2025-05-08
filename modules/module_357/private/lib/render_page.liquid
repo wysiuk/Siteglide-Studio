@@ -1,0 +1,34 @@
+{% function config = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{%- if context.headers.REQUEST_METHOD == 'POST' -%}
+  {% assign page = context.params | default: context.page.metadata.studio %}
+{%- else -%}
+  {% assign page = context.page.metadata.studio %}
+{%- endif -%}
+{%- if page.order.first -%}
+  {% assign content = page %}
+  {% function webapp_config = 'modules/module_357/render/webapp_config', sections: content.sections -%}
+  {%- for selection_loop in content.order -%}
+    {% assign section = content.sections[selection_loop] %}
+    {% assign settings = section.settings %}
+    {%- case section.type -%}
+      {%- when 'liquid' -%}
+        {% print section.content %}
+      {%- else -%}
+        {% if section.type contains 'dynamic_legacy|' %}
+          {% comment %} Dynamic Legacy - treat like Liquid {% endcomment %}
+
+          {% print section.data.content %}
+        {% else %}
+          {% comment %} Sections {% endcomment %}
+          {% function data = 'modules/module_357/render/data', current_section: section, webapp_config: webapp_config -%}
+          {% function lists = 'modules/module_357/render/lists', current_section: section, webapp_config: webapp_config -%}
+          {% function components = 'modules/module_357/render/components', current_section: section, webapp_config: webapp_config -%}
+
+          {% capture render_path -%}theme/{{context.layout.metadata.studio_theme}}/sections/{{section.type}}{% endcapture -%}
+          {%- include render_path, section: current_section, section_id: selection_loop, config: config, settings: settings, this: data, components: components, lists: lists -%}
+        {% endif %}
+    {%- endcase -%}
+  {%- endfor -%}
+{%- else -%}
+  {{content_for_layout}}
+{%- endif -%}

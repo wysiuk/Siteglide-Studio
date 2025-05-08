@@ -1,0 +1,187 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/fetch-tables
+---
+{% graphql webapps = 'modules/module_357/get_all_webapp_definitions', | dig: 'webapps', 'results' -%}
+{
+  "tables":[
+    {%- for _webapp in webapps -%}
+    {%- if webapp.type == 'system' -%}
+    {%- endif -%}
+    {% assign webapp = _webapp.body | parse_json %}
+    {
+      "name": "{{webapp.type}}_{{webapp.id}}",
+      "readable_name": {{webapp.name | json}},
+      "webapp": {{webapp | json}},
+      "properties": [
+        {%- for property in webapp.custom_fields -%}
+          {% assign key = property[0] %}
+          {% assign value = property[1] %}
+          {
+            "name": {{key | json}},
+            "readable_name": {{value.name | json}},
+            "attribute_type": "string",
+            "field_type": {{value.type | json}}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ],
+      "system_properties": [
+        {%- for property in webapp.system_fields -%}
+          {% assign key = property[0] %}
+          {% assign value = property[1] %}
+          {
+            "name": {{key | json}},
+            "readable_name": {{value.name | json}},
+            "attribute_type": "string",
+            "field_type": {{value.type | json}}
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+{% comment -%}
+{
+  "tables":[
+    {%- for _webapp in webapps -%}
+    {%- if webapp.type == 'system' -%}
+    {%- endif -%}
+    {% assign webapp = _webapp.body | parse_json %}
+    {
+      "name": "{{webapp.type}}_{{webapp.id}}",
+      "readable_name": {{webapp.name | json}},
+      "webapp": {{webapp | json}},
+      "properties": [
+        {
+          "name": "name",
+          "readable_name": "Name",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {%- for property in webapp.custom_fields -%}
+          {% assign key = property[0] %}
+          {% assign value = property[1] %}
+          {
+            "name": {{key | json}},
+            "readable_name": {{value.name | json}},
+            "attribute_type": "string",
+            "field_type": {{value.type | json}}
+          },
+        {%- endfor -%}
+        {
+          "name": "slug",
+          "readable_name": "Slug",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "release_date",
+          "readable_name": "Release Date",
+          "attribute_type": "int",
+          "field_type":"integer"
+        },
+        {
+          "name": "expiry_date",
+          "readable_name": "Expiry Date",
+          "attribute_type": "int",
+          "field_type":"integer"
+        }
+      ],
+      "system_properties":[
+        {
+          "name": "address",
+          "readable_name": "Address",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "weighting",
+          "readable_name": "Weighting",
+          "attribute_type": "int",
+          "field_type":"integer"
+        },
+        {
+          "name": "enabled",
+          "readable_name": "Enabled",
+          "attribute_type": "string",
+          "field_type":"boolean"
+        },
+        {
+          "name": "category_array",
+          "readable_name": "Category Array",
+          "attribute_type": "string",
+          "field_type":"array"
+        },
+        {
+          "name": "meta_title",
+          "readable_name": "Meta Title",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "meta_desc",
+          "readable_name": "Meta Desc",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "og_title",
+          "readable_name": "OG Title",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "og_desc",
+          "readable_name": "OG Desc",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "og_type",
+          "readable_name": "OG Type",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "og_image",
+          "readable_name": "OG Image",
+          "attribute_type": "string",
+          "field_type":"image"
+        },
+        {
+          "name": "og_url",
+          "readable_name": "OG URL",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "twitter_type",
+          "readable_name": "Twitter Type",
+          "attribute_type": "string",
+          "field_type":"string"
+        },
+        {
+          "name": "secure_zone_array",
+          "readable_name": "Secure Zone Array",
+          "attribute_type": "string",
+          "field_type":"array"
+        },
+        {
+          "name": "location",
+          "readable_name": "Location",
+          "attribute_type": "string",
+          "field_type":"geojson"
+        }
+      ]
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+{% endcomment -%}

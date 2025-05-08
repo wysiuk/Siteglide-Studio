@@ -1,0 +1,38 @@
+{% assign webapp_config_paths = '[]' | parse_json %}
+{% capture webapp_config_path -%}/{% endcapture -%}
+
+{%- for _section in sections -%}
+  {% assign section = _section[1] %}
+  {%- if section.data_source.type == 'webapp' and section.data_source.table contains 'webapp_' -%}
+    {% capture webapp_config_path -%}tables/webapps/{{section.data_source.table  | remove: 'webapp_'}}{% endcapture -%}
+    {% assign webapp_config_paths = webapp_config_paths | array_add: webapp_config_path %}
+  {%- elsif section.data_source.type == 'webapp' and section.data_source.table contains 'module_' -%}
+    {% capture webapp_config_path -%}tables/modules/{{section.data_source.table  | remove: 'module_'}}{% endcapture -%}
+    {% assign webapp_config_paths = webapp_config_paths | array_add: webapp_config_path %}
+  {%- endif -%}
+  {%- for _list in section.lists -%}
+    {% assign list = _list[1] %}
+    {%- if list.data_source.type == 'webapp' and list.data_source.table contains 'webapp_' -%}
+      {% capture webapp_config_path -%}tables/webapps/{{list.data_source.table  | remove: 'webapp_'}}{% endcapture -%}
+      {% assign webapp_config_paths = webapp_config_paths | array_add: webapp_config_path %}
+    {%- elsif list.data_source.type == 'webapp' and list.data_source.table contains 'module_' -%}
+      {% capture webapp_config_path -%}tables/modules/{{list.data_source.table  | remove: 'module_'}}{% endcapture -%}
+      {% assign webapp_config_paths = webapp_config_paths | array_add: webapp_config_path %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+{% assign webapp_config_paths = webapp_config_paths | uniq %}
+{% graphql webapp_configs = 'modules/module_357/get_webapp_definitions', webapp_config_paths: webapp_config_paths -%}
+
+{% assign webapp_config = '{}' | parse_json %}
+{%- for config in webapp_configs.webapps.results -%}
+  {% assign parsed_config = config.body | parse_json %}
+  {% assign key = parsed_config.type | append: '_' | append: parsed_config.id %}
+  {% assign config_options = '{}' | parse_json %}
+  {% assign config_options = config_options | add_hash_key: 'slug', parsed_config.slug %}
+  {% assign config_options = config_options | add_hash_key: 'detail', parsed_config.detail %}
+
+  {% assign webapp_config = webapp_config | add_hash_key: key, config_options %}
+{%- endfor -%}
+{% return webapp_config -%}

@@ -1,0 +1,21 @@
+{%- if current_section.data_source.type == 'webapp' -%}
+  {% graphql record_data = 'modules/module_357/get_webapp_item_data', table: current_section.data_source.table, properties: current_section.data_source.properties | dig: 'records', 'results' | first -%}
+  {% assign data = '{}' | parse_json %}
+  {% assign mapping = current_section.mapping %}
+  {% capture webapp_slug -%}/{{webapp_config[current_section.data_source.table].slug}}/{% endcapture -%}
+  {%- for field in current_section.data -%}
+    {% assign field_name = field[0] %}
+    {% assign field_value = field[1] %}
+    {% assign mapping_key = mapping[field_name] %}
+    {%- if mapping_key == 'slug' -%}
+      {% assign field_data = record_data.properties[mapping_key] | default: record_data[mapping_key] | default: field_value  %}
+      {% assign field_data = field_data | prepend: webapp_slug  %}
+    {%- else -%}
+      {% assign field_data = record_data.properties[mapping_key] | default: record_data[mapping_key] | default: field_value  %}
+    {%- endif -%}
+    {% assign data = data | hash_add_key: field_name, field_data %}
+  {%- endfor -%}
+{%- else -%}
+  {% assign data = current_section.data %}
+{%- endif -%}
+{% return data -%}

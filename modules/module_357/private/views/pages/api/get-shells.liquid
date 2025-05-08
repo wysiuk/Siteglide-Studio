@@ -1,0 +1,23 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/get-shells
+---
+{% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{%- capture shell_path %}theme/{{settings.theme}}/shells/{%- endcapture-%}
+{% graphql shells = 'modules/module_357/get_shells', shell_path: shell_path | dig: 'admin_liquid_partials', 'results' -%}
+[
+  {%- for shell in shells -%}
+    {
+      "id": {{shell.id | json}},
+      "name": {{shell.metadata.name | default: 'Unnamed' | json}},
+      "updated_at": {{shell.updated_at | date: '%H:%M %d/%m/%Y' | json}},
+      "value": {{shell.path | remove: shell_path  | json}}
+    }
+  {%- endfor -%}
+]

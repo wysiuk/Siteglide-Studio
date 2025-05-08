@@ -1,0 +1,22 @@
+query{
+  admin_liquid_layouts(
+		filter: {
+      metadata:[
+        {
+        	attribute:{
+            key: "studio_version"
+            value_int: 3
+          }
+        }
+      ]
+    }
+  ){
+		results{
+      id
+      updated_at
+      path
+    	metadata
+    	physical_file_path
+    }
+  }
+}

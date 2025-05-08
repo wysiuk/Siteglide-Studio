@@ -1,0 +1,19 @@
+{%- if page.format == 'json' -%}
+  {% assign content = page.body | parse_json %}
+  {% function webapp_config = 'modules/module_357/render/webapp_config', sections: content.sections -%}
+  {%- for selection_loop in content.order -%}
+    {% assign current_section = content.sections[selection_loop] %}
+    {% function data = 'modules/module_357/render/data', current_section: current_section, webapp_config: webapp_config -%}
+    {% function lists = 'modules/module_357/render/lists', current_section: current_section, webapp_config: webapp_config -%}
+    {% function components = 'modules/module_357/render/components', current_section: current_section, webapp_config: webapp_config -%}
+
+    {% capture render_path -%}theme/{{config.theme}}/sections/{{content.sections[selection_loop].type}}{% endcapture -%}
+    {%- include render_path, section: current_section, section_id: selection_loop, config: config, settings: current_section.settings, this: data, components: components, lists: lists -%}
+  {%- endfor -%}
+  {% response_status 200 -%}
+{%- elsif params.unmatched_route != blank -%}
+  {% capture render_path -%}theme/{{config.theme}}/sections/404{% endcapture -%}
+  {%- include render_path, section: current_section, section_id: selection_loop, config: config -%}
+{%- else -%}
+  {{content_for_layout}}
+{%- endif -%}

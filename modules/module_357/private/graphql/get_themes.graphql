@@ -1,0 +1,20 @@
+query{
+  admin_liquid_partials(
+		filter: {
+      physical_file_path:{
+        contains: "config.liquid"
+      }
+      path:{
+        contains: "theme"
+      }
+    }
+  ){
+		results{
+      id
+      updated_at
+      path
+    	metadata
+    	physical_file_path
+    }
+  }
+}

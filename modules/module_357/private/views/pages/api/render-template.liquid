@@ -1,0 +1,23 @@
+---
+slug: modules/module_357/api/render-template
+method: post
+layout: >
+  {{context.params.physical_file_path | remove: 'views/layouts/' | remove: '.liquid' }}
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+<h2 class="siteglide-studio-page-content">Page Content!</h2>
+<style media="screen">
+  .siteglide-studio-page-content{
+    background: #ffffff;
+    text-align: center;
+    color: #000000;
+    padding: 160px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, Cantarell, Ubuntu, roboto, noto, helvetica, arial, sans-serif;
+    font-size: 30px;
+  }
+</style>

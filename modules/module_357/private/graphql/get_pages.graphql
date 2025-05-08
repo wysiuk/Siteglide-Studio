@@ -1,0 +1,23 @@
+query($id: ID, $theme_path: String){
+  admin_pages(
+		per_page: 100
+    filter:{
+      physical_file_path:{
+        starts_with:$theme_path
+      }
+      id: {
+        value: $id
+      }
+    }
+  ){
+    total_entries
+    results{
+      id
+      layout
+      slug
+      updated_at
+      physical_file_path
+      metadata
+    }
+  }
+}

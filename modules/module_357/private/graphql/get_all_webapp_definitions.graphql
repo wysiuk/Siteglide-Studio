@@ -1,0 +1,24 @@
+{
+	webapps: admin_liquid_partials(
+    per_page: 100
+    filter:{
+			or:[
+				{
+					path: {
+						starts_with: "tables/webapps"
+					}
+				},
+				{
+					path: {
+						starts_with: "tables/modules"
+					}
+				}
+			]
+    }
+  ){
+    results{
+      path
+      body
+    }
+  }
+}

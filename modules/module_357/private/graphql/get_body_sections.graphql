@@ -1,0 +1,30 @@
+query($section_path: String!){
+  admin_liquid_partials(
+		per_page: 100
+    sort:{
+      metadata:{
+        name: "name"
+        order: ASC
+      }
+    }
+    filter:{
+      path: {
+        starts_with: $section_path
+      }
+      metadata:{
+        attribute:{
+          key: "class"
+          value: "section"
+        }
+      }
+    }
+  ){
+    total_entries
+    results{
+      path
+      metadata
+      updated_at
+      physical_file_path
+    }
+  }
+}

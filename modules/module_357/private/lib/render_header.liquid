@@ -1,0 +1,22 @@
+{%- if context.page.metadata.hide_header_footer == true -%}
+  {% return false -%}
+{%- endif -%}
+{% assign header = context.params.studio.header | default: context.layout.metadata.studio.header %}
+{%- if header.order != blank -%}
+  {%- for selection_loop in header.order -%}
+    {% assign section = header.sections[selection_loop] %}
+    {% assign settings = section.settings %}
+    {%- case section.type -%}
+
+      {%- when 'liquid' -%}
+        {% print section.content %}
+      {%- else -%}
+        {% function data = 'modules/module_357/render/data', current_section: section, webapp_config: webapp_config -%}
+        {% function lists = 'modules/module_357/render/lists', current_section: section, webapp_config: webapp_config -%}
+        {% function components = 'modules/module_357/render/components', current_section: section, webapp_config: webapp_config -%}
+
+        {% capture render_path -%}theme/{{context.layout.metadata.studio_theme}}/sections/{{section.type}}{% endcapture -%}
+        {%- include render_path, section: current_section, section_id: selection_loop, config: config, settings: settings, this: data, components: components, lists: lists -%}
+    {%- endcase -%}
+  {%- endfor -%}
+{%- endif -%}

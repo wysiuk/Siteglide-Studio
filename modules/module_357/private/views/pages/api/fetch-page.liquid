@@ -1,0 +1,32 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/fetch-page
+---
+{% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{%- graphql page = 'modules/module_357/check_page', physical_file_path: params.page_url | dig: 'admin_pages', 'results' | first -%}
+{%- if page.metadata.studio != null -%}
+  {% assign body = page.metadata.studio | parse_json %}
+  {% assign section_array = '[]' | parse_json %}
+  {%- for section in body.order -%}
+    {%- capture section_path %}theme/{{settings.theme}}/sections/{{body.sections[section].type}}{%- endcapture-%}
+    {% assign section_array = section_array | array_add: section_path %}
+  {%- endfor -%}
+  {% assign section_array = section_array | uniq %}
+  {%- graphql sections_data = 'modules/module_357/get_sections', path_array: section_array | dig: 'admin_liquid_partials', 'results' -%}
+  {% parse_json sections -%}
+    {
+      {%- for section in sections_data -%}
+        {{section.path | split: '/' | last | json}}: {{section.metadata | json | html_safe}}{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    }
+  {% endparse_json -%}
+{%- else -%}
+  {% assign body = page.body  %}
+{%- endif -%}
+{{page | json}}

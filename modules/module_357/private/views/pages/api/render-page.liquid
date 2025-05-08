@@ -1,0 +1,12 @@
+---
+slug: modules/module_357/api/render-page
+method: post
+layout: >
+  {{context.params.template}}
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---

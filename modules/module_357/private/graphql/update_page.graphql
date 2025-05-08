@@ -1,0 +1,11 @@
+mutation($metadata: HashObject!, $physical_file_path: String!){
+  admin_page_update(
+    physical_file_path: $physical_file_path
+		page: {
+      metadata:$metadata
+    }
+  ){
+    id
+    metadata
+  }
+}

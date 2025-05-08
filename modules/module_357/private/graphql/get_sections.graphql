@@ -1,0 +1,16 @@
+query($path_array: [String!]){
+  admin_liquid_partials(
+		per_page: 100
+    filter:{
+      path: {
+        value_in: $path_array
+      }
+    }
+  ){
+    total_entries
+    results{
+      path
+      metadata
+    }
+  }
+}

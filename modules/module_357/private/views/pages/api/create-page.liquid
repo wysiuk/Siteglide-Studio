@@ -1,0 +1,33 @@
+---
+slug: modules/module_357/api/create-page
+method: post
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{% assign page_url = params.page_url  | replace: '/',' ' | strip | replace: ' ', '/' %}
+{%- capture physical_file_path %}views/pages/theme/{{settings.theme}}/{{page_url}}.liquid{%- endcapture-%}
+{% capture body -%}{% endcapture -%}
+{% parse_json metadata -%}
+  {
+    "id": {{'now' | date: '%s'}},
+    "name": {{params.name | json}},
+    "file_type": "page",
+    "enabled": true,
+    "last_edit": {{'now' | date: '%s000'}},
+    "name": {{params.name | json}},
+    "studio": {"order":[], "sections":{}}
+  }
+{% endparse_json -%}
+{%- graphql create_page = 'modules/module_357/create_page', slug: page_url, physical_file_path: physical_file_path, metadata: metadata, layout: params.template, format: 'json' -%}
+{
+  "id": {{create_page.admin_page_create.id | json}},
+  "create_page": {{create_page | json}},
+  "page_url": {{create_page.admin_page_create.physical_file_path | json}},
+  "slug": {{create_page.admin_page_create.slug | json}}
+}

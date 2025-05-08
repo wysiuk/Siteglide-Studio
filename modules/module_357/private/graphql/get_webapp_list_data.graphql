@@ -1,0 +1,41 @@
+query($now: String, $table: String, $properties: [PropertiesFieldInput!], $per_page: Int = 10){
+  records(
+    per_page: $per_page
+    filter: {
+      table: {
+        value: $table
+      }
+      properties: [
+        {
+          name: "enabled"
+          value_boolean: true
+        }
+        {
+          name: "release_date"
+          range: {
+            lte: $now
+          }
+        }
+        {
+          name: "expiry_date"
+          range: {
+            gte: $now
+          }
+        }
+      ]
+    }
+    sort:{
+      properties:{
+        name: "name"
+        order: ASC
+      }
+    }
+  ){
+    results {
+      id
+      created_at
+      updated_at
+      properties(select: $properties)
+    }
+  }
+}

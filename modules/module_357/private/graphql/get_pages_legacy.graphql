@@ -1,0 +1,18 @@
+query($page_path: String!){
+  admin_liquid_partials(
+		per_page: 100
+    filter:{
+      path: {
+        starts_with: $page_path
+      }
+    }
+  ){
+    total_entries
+    results{
+      id
+      updated_at
+      path
+      metadata
+    }
+  }
+}

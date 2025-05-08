@@ -1,0 +1,61 @@
+---
+slug: modules/module_357/api/update-preview-section
+method: post
+layout: >
+  {{context.params.template}}
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{%- graphql section = 'modules/module_357/update_partial', physical_file_path: 'modules/module_357/public/views/partials/preview-section.liquid', metadata: params.section, body: params.htmlCode, format: 'html' | dig: 'admin_liquid_partial_update', 'metadata' -%}
+{% parse_json this -%}
+  {
+    {%- for field in section.fields -%}
+      {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+{% endparse_json -%}
+{% parse_json lists -%}
+  {
+    {%- for list in section.lists -%}
+      {{list.type | json}}: [
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        },
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        },
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        }
+      ]{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+{% endparse_json -%}
+{% parse_json components -%}
+  [
+    {%- for component in section.components -%}
+
+      {
+        "type": {{component.type | json}},
+        "data":{
+          {%- for field in component.fields -%}
+            {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        }
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+{% endparse_json -%}
+<div id="SECTION-PREVIEW">
+  {%- include 'modules/module_357/preview-section', this: this, lists: lists, components: components -%}
+</div>

@@ -1,0 +1,8 @@
+{% response_headers '{
+  "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/ https://*.platform-os.com",
+  "Access-Control-Allow-Origin": "*"
+}' -%}
+{% assign shell = context.params.studio | default: context.layout.metadata.studio %}
+{%- if shell.head.content != blank -%}
+  {{shell.head.content | html_safe}}
+{%- endif -%}

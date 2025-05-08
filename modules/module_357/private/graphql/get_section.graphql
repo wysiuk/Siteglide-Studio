@@ -1,0 +1,18 @@
+query($section_path: String!){
+  admin_liquid_partials(
+		per_page: 1
+    filter:{
+      path: {
+        starts_with: $section_path
+      }
+    }
+  ){
+    total_entries
+    results{
+      path
+      metadata
+      physical_file_path
+      body
+    }
+  }
+}

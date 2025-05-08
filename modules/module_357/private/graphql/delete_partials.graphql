@@ -1,0 +1,11 @@
+mutation($physical_file_path: String!){
+  admin_liquid_partial_delete_all(
+    filter:{
+      physical_file_path: {
+        starts_with: $physical_file_path
+      }
+    }
+  ){
+    count
+  }
+}

@@ -1,0 +1,10 @@
+mutation($metadata: HashObject!, $physical_file_path: String!){
+  admin_liquid_layout_update(
+    physical_file_path: $physical_file_path
+		liquid_layout: {
+      metadata:$metadata
+    }
+  ){
+    id
+  }
+}

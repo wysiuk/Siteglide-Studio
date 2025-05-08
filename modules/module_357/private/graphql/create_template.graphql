@@ -1,0 +1,13 @@
+mutation($body: String!, $physical_file_path: String!, $path: String!, $metadata: HashObject!){
+  admin_liquid_layout_create(
+		liquid_layout: {
+      physical_file_path: $physical_file_path
+      path: $path
+      body: $body
+      metadata: $metadata
+    }
+  ){
+    id
+    physical_file_path
+  }
+}

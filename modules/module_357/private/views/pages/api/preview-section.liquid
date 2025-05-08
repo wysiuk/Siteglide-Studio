@@ -1,0 +1,62 @@
+---
+layout: |
+  {{context.params.layout | default: 'templates/1'}}
+slug: modules/module_357/preview-section
+metadata:
+  hide_header_footer: true
+response_headers: |
+  {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/ http://localhost:8002/"
+  }
+---
+{%- capture section_path %}theme/{{context.layout.metadata.studio_theme}}/sections/{{params.section}}{%- endcapture-%}
+{% graphql section = 'modules/module_357/get_sections', path_array: section_path | dig: 'admin_liquid_partials', 'results' | first | dig: 'metadata' -%}
+{% parse_json this -%}
+  {
+    {%- for field in section.fields -%}
+      {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+{% endparse_json -%}
+{% parse_json lists -%}
+  {
+    {%- for list in section.lists -%}
+      {{list.type | json}}: [
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        },
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        },
+        {
+          {%- for field in list.fields -%}
+             {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        }
+      ]{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  }
+{% endparse_json -%}
+{% parse_json components -%}
+  [
+    {%- for component in section.components -%}
+
+      {
+        "type": {{component.type | json}},
+        "data":{
+          {%- for field in component.fields -%}
+            {{field.id | json}}: {{field.default | json}}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        }
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+{% endparse_json -%}
+<div id="SECTION-PREVIEW">
+  {%- include section_path, this: this, lists: lists, components: components -%}
+</div>

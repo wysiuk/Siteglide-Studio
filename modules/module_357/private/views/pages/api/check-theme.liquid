@@ -1,0 +1,16 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/check-theme
+---
+{% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{%- capture partial_path %}theme/{{params.path}}/config{%- endcapture-%}
+{%- graphql partial = 'modules/module_357/check_partial', path: partial_path | dig: 'admin_liquid_partials', 'results' | first -%}
+{
+  "taken": {%- if partial.id -%}true{% else -%}false{% endif -%}
+}

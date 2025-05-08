@@ -1,0 +1,24 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/fetch-sections
+---
+{%- capture page_path %}theme/{{params.theme}}/sections{%- endcapture-%}
+{%- graphql sections = 'modules/module_357/get_body_sections', section_path: page_path | dig: 'admin_liquid_partials', 'results' -%}
+[
+  {%- for section in sections -%}
+    {
+      "name": {{section.metadata.name | json}},
+      "id": {{section.path | split: '/' | last | json}},
+      "category": {{section.metadata.category | default: 'Custom' | titleize | json}},
+      "updated_at": {{section.updated_at | date: '%H:%M %d/%m/%Y' | json}},
+      "settings": {{section.metadata | json | html_safe}},
+      "physical_file_path": {{section.physical_file_path | json }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+]

@@ -1,0 +1,29 @@
+query get_partials($orFilter: [LiquidPartialsFilterInput!], $page: Int = 1, $theme: String){
+  admin_liquid_partials(
+		per_page: 5000
+    page: $page,
+    sort:{
+      metadata:{
+        name: "name"
+        order: ASC
+      }
+    }
+    filter:{
+      or: $orFilter,
+      metadata: {
+        attribute: {
+          key: "studio_theme",
+          value: $theme
+        }
+      }
+    }
+  ){
+    total_entries
+    total_pages
+    results{
+      path
+      physical_file_path
+      metadata
+    }
+  }
+}

@@ -1,0 +1,19 @@
+query($path: String!){
+  admin_liquid_partials(
+		per_page: 1
+    filter:{
+      path: {
+        value: $path
+      }
+    }
+  ){
+    total_entries
+    results{
+      id
+      path
+      metadata
+      format
+      body
+    }
+  }
+}

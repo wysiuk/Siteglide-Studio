@@ -1,0 +1,14 @@
+query($physical_file_path: String!){
+  admin_liquid_partials(
+		per_page: 100
+    filter:{
+      physical_file_path: {
+        starts_with: $physical_file_path
+      }
+    }
+  ){
+    results{
+      physical_file_path
+    }
+  }
+}

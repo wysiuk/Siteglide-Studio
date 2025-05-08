@@ -1,0 +1,7 @@
+mutation($physical_file_path: String!){
+  admin_liquid_layout_delete(
+    physical_file_path: $physical_file_path
+  ){
+    id
+  }
+}

@@ -1,0 +1,26 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/get-pages
+---
+{% function settings = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+{%- capture theme_path %}views/pages/theme/{{settings.theme}}{%- endcapture-%}
+{% graphql pages = 'modules/module_357/get_pages', theme_path: theme_path | dig: 'admin_pages', 'results' -%}
+[
+  {%- for page in pages -%}
+    {
+      "id": {{page.id | json}},
+      "title": {{page.metadata.name | default: 'Unnamed' | json}},
+      "enabled": {%- if page.metadata.enabled == 'true' -%}"Enabled"{%- else -%}"Disabled"{%- endif -%},
+      "slug": {{page.slug | default: 'Unnamed' | json}},
+      "updated_at": {{page.updated_at | date: '%H:%M %d/%m/%Y' | json}},
+      "page_url": {{page.physical_file_path | remove: page_path | remove: 'index' | json}},
+      "shell": {{page.layout | capitalize | json}}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+]

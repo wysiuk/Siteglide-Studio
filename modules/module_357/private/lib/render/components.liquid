@@ -1,0 +1,7 @@
+{% assign components = '[]' | parse_json %}
+
+{%- for component in current_section.component_order -%}
+  {% assign components = components | array_add: current_section.components[component] %}
+{%- endfor -%}
+
+{% return components -%}

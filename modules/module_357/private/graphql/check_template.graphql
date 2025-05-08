@@ -1,0 +1,18 @@
+query($physical_file_path: String){
+  admin_liquid_layouts(
+		per_page: 1
+    filter:{
+      physical_file_path:{
+        value: $physical_file_path
+      }
+    }
+  ){
+    total_entries
+    results{
+      id
+      updated_at
+      physical_file_path
+      metadata
+    }
+  }
+}

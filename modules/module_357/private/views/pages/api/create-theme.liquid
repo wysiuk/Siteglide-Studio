@@ -1,0 +1,26 @@
+---
+slug: modules/module_357/api/create-theme
+method: post
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{%- capture physical_file_path %}views/partials/theme/{{params.path}}/config.liquid{%- endcapture-%}
+{%- capture path %}theme/{{params.path}}/config{%- endcapture-%}
+{% capture body -%}{% endcapture -%}
+{% parse_json metadata -%}
+  {
+    "name": {{params.name | json}}
+  }
+{% endparse_json -%}
+{%- graphql create_partial = 'modules/module_357/create_partial', path: path, physical_file_path: physical_file_path, metadata: metadata, body: body, format: 'json' -%}
+{
+  "id": {{create_partial.admin_liquid_partial_create.id | json}},
+  "create_partial": {{create_partial | json}},
+  "page_url": {{create_partial.admin_liquid_partial_create.physical_file_path | json}},
+  "slug": {{create_partial.admin_liquid_partial_create.slug | json}}
+}

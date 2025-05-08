@@ -1,0 +1,30 @@
+{% function config = 'modules/module_357/parse', path: 'modules/module_357/site_config' -%}
+
+{% comment -%}
+{% capture page_path %}theme/{{config.theme}}/pages{{context.location.pathname | remove_first: '/' | default: 'index' | prepend: '/'}}{% endcapture-%}
+{% graphql page = 'modules/module_357/check_partial', path: page_path | dig: 'admin_liquid_partials', 'results' | first -%}
+{% endcomment -%}
+{% assign page = context.page.metadata.studio %}
+
+{% capture shell_path %}theme/{{page.metadata.theme | default: config.theme}}/shells/{{page.metadata.shell | default: config.default_shell}}{% endcapture-%}
+{% graphql shell = 'modules/module_357/check_partial', path: shell_path | dig: 'admin_liquid_partials', 'results' | first -%}
+{% response_headers '{
+  "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/ https://*.platform-os.com",
+  "Access-Control-Allow-Origin": "*"
+}' -%}
+{{context}}
+{%- if shell.id -%}
+  {%- include shell_path -%}
+{%- else -%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {% include 'modules/module_357/render_head' %}
+  </head>
+  <body>
+    {%- include 'modules/module_357/render_header' -%}
+    {%- include 'modules/module_357/render_page' -%}
+    {%- include 'modules/module_357/render_footer' -%}
+  </body>
+</html>
+{%- endif -%}

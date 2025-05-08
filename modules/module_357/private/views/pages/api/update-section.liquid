@@ -1,0 +1,19 @@
+---
+slug: modules/module_357/api/update-section
+method: post
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+---
+{%- graphql update_partial = 'modules/module_357/update_partial', physical_file_path: params.physical_file_path, metadata: params.section, body: params.htmlCode, format: 'html' -%}
+{
+  "id": {{update_partial.admin_liquid_partial_update.id | json}},
+  "update_partial": {{update_partial | json}},
+  "page_url": {{update_partial.admin_liquid_partial_update.physical_file_path | json}},
+  "slug": {{update_partial.admin_liquid_partial_create.slug | json}},
+  "error": {{update_partial.errors[0].message | json}}
+}

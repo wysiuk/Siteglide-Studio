@@ -1,0 +1,22 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/get-themes
+---
+{% graphql themes = 'modules/module_357/get_themes' | dig: 'admin_liquid_partials', 'results' -%}
+[
+  {%- for theme in themes -%}
+    {
+      "id": {{theme.id | json}},
+      "physical_file_path": {{theme.physical_file_path | default: 'Unnamed' | json}},
+      "metadata": {{theme.metadata | json}},
+      "updated_at": {{theme.updated_at | date: '%H:%M %d/%m/%Y' | json}},
+      "value": {{theme.path | remove: 'theme/' | remove: '/config' | json}}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+]

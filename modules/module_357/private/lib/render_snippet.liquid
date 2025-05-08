@@ -1,0 +1,3 @@
+{% assign current_section = content.sections[selection_loop] %}
+{% capture render_path -%}theme/{{context.layout.metadata.studio_theme}}/snippets/{{path}}{% endcapture -%}
+{%- include render_path -%}

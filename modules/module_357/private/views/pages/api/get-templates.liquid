@@ -1,0 +1,27 @@
+---
+layout: ''
+response_headers: |
+  {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+  }
+slug: modules/module_357/api/get-templates
+---
+{%- if params.theme -%}
+  {% graphql shells = 'modules/module_357/get_templates_theme', theme: params.theme | dig: 'admin_liquid_layouts', 'results' -%}
+{%- else -%}
+  {% graphql shells = 'modules/module_357/get_templates' | dig: 'admin_liquid_layouts', 'results' -%}
+{%- endif -%}
+[
+  {%- for shell in shells -%}
+    {
+      "id": {{shell.id | json}},
+      "physical_file_path": {{shell.physical_file_path | default: 'Unnamed' | json}},
+      "name": {{shell.metadata.name | default: 'Unnamed' | json}},
+      "theme": {{shell.metadata.studio_theme | default: 'None' | json}},
+      "updated_at": {{shell.updated_at | date: '%H:%M %d/%m/%Y' | json}},
+      "value": {{shell.path | remove: shell_path | json}}
+    }{%- unless forloop.last -%},{%- endunless -%}
+  {%- endfor -%}
+]
