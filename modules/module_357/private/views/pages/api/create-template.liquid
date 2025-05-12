@@ -6,7 +6,7 @@ response_headers: |
   {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https:// *.netlify.app http://localhost:3000/ http://localhost:5173/ http://localhost:8002/ http://*.siteglide.support"
   }
 ---
 {% graphql templates = 'modules/module_357/get_all_templates_for_creation' | dig: 'admin_liquid_layouts', 'results' -%}

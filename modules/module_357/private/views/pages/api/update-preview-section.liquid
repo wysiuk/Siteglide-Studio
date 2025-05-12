@@ -7,7 +7,7 @@ response_headers: |
   {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https://*.netlify.app http://localhost:3000/ http://localhost:5173/"
+    "Content-Security-Policy": "frame-ancestors https://*.siteglide.com https://*.sitegurus.io https:// *.netlify.app http://localhost:3000/ http://localhost:5173/ http://localhost:8002/ http://*.siteglide.support"
   }
 ---
 {%- graphql section = 'modules/module_357/update_partial', physical_file_path: 'modules/module_357/public/views/partials/preview-section.liquid', metadata: params.section, body: params.htmlCode, format: 'html' | dig: 'admin_liquid_partial_update', 'metadata' -%}
