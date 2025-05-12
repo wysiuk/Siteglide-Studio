@@ -11,5 +11,8 @@ response_headers: |
 ---
 {% assign post_data = context.post_params | parse_json %}
 {%- graphql page_data = 'modules/module_357/update_page', physical_file_path: 'modules/module_357/public/views/pages/preview-page.liquid', metadata: post_data | dig: 'admin_page_update', 'metadata' -%}
+OK
+{% comment -%}
 {% capture redirect_to -%}modules/module_357/preview-page?template={{context.params.template}}{% endcapture -%}
 {% redirect_to redirect_to %}
+{% endcomment -%}
