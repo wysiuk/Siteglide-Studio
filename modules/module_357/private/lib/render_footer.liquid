@@ -1,3 +1,4 @@
+
 {%- if context.page.metadata.hide_header_footer == true -%}
   {% return false -%}
 {%- endif -%}
@@ -17,6 +18,30 @@
         {%- include render_path, section: current_section, section_id: selection_loop, config: config, settings: section.settings, this: data, components: components, lists: lists -%}
     {%- endcase -%}
   {%- endfor -%}
+{%- endif -%}
+
+{%- if context.location.pathname == '/modules/module_357/preview-page' -%}
+  <script type="text/javascript">
+    window.addEventListener('message', e => {
+      if (e.data && e.data.type === 'GET_SCROLL') {
+        // send back our current scroll
+        e.source.postMessage({
+          type: 'SCROLL_POS',
+          payload: { x: window.scrollX, y: window.scrollY }
+        }, e.origin);
+      }
+      else if (e.data && e.data.type === 'SET_SCROLL') {
+        // restore scroll after load
+        window.scrollTo(e.data.payload.x, e.data.payload.y);
+      }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('a').forEach(link => {
+        link.setAttribute('href', '#');
+        link.addEventListener('click', e => e.preventDefault());
+      });
+    });
+  </script>
 {%- endif -%}
 
 {% assign shell = context.params.studio | default: context.layout.metadata.studio %}

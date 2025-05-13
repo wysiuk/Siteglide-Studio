@@ -29,6 +29,7 @@ response_headers: |
 {
   "id": {{create_partial.admin_liquid_partial_create.id | json}},
   "create_partial": {{create_partial | json}},
+  "path": {{create_partial.admin_liquid_partial_create.path | split: '/' | last | json}},
   "page_url": {{create_partial.admin_liquid_partial_create.physical_file_path | json}},
   "slug": {{create_partial.admin_liquid_partial_create.slug | json}}
 }

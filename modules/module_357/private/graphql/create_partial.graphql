@@ -9,5 +9,6 @@ mutation($body: String!, $physical_file_path: String!, $path: String!, $metadata
     }
   ){
     id
+    path
   }
 }
